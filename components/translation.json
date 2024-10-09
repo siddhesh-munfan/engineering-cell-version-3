@@ -1,0 +1,47 @@
+{
+  "English": {
+    "Engineers Cell": "Engineers Cell",
+    "User Information Form": "User Information Form",
+    "Name": "Name",
+    "Email": "Email",
+    "Phone": "Phone",
+    "Address": "Address",
+    "Select District": "Select District",
+    "Select Taluka": "Select Taluka",
+    "Select Engineering Branch": "Select Engineering Branch",
+    "Enter your message": "Enter your message",
+    "Submit": "Submit",
+    "Select Language": "Select Language",
+    "Upload Profile Picture": "Upload Profile Picture"
+  },
+  "मराठी": {
+    "Engineers Cell": "इंजीनियर्स कक्ष",
+    "User Information Form": "वापरकर्ता माहिती फॉर्म",
+    "Name": "नाव",
+    "Email": "ईमेल",
+    "Phone": "फोन",
+    "Address": "पत्ता",
+    "Select District": "जिल्हा निवडा",
+    "Select Taluka": "तालुका निवडा",
+    "Select Engineering Branch": "अभियांत्रिकी शाखा निवडा",
+    "Enter your message": "आपला संदेश प्रविष्ट करा",
+    "Submit": "सबमिट करा",
+    "Select Language": "भाषा निवडा",
+    "Upload Profile Picture": "प्रोफाइल चित्र अपलोड करा"
+  },
+  "हिंदी": {
+    "Engineers Cell": "इंजीनियर्स सेल",
+    "User Information Form": "उपयोगकर्ता जानकारी फॉर्म",
+    "Name": "नाम",
+    "Email": "ईमेल",
+    "Phone": "फोन",
+    "Address": "पता",
+    "Select District": "जिला चुनें",
+    "Select Taluka": "तालुका चुनें",
+    "Select Engineering Branch": "इंजीनियरिंग शाखा चुनें",
+    "Enter your message": "अपना संदेश दर्ज करें",
+    "Submit": "जमा करें",
+    "Select Language": "भाषा चुनें",
+    "Upload Profile Picture": "प्रोफ़ाइल चित्र अपलोड करें"
+  }
+}
