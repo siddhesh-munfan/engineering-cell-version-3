@@ -65,9 +65,6 @@ const Form = ({
     // Validate taluka
     if (!selectedTaluka) newErrors.taluka = t("Taluka is required.");
 
-    // Validate message
-    if (!message) newErrors.message = t("Message is required.");
-
     return newErrors;
   };
 
@@ -150,7 +147,7 @@ const Form = ({
             />
             {errors.email && <p className="text-red-500">{errors.email}</p>}
             <Input 
-              type="tel" 
+              type="number" 
               placeholder={t("Phone")} 
               value={phone} 
               onChange={(e) => setPhone(e.target.value)} 
@@ -209,7 +206,7 @@ const Form = ({
               </SelectContent>
             </Select>
             <Textarea 
-              placeholder={t("Enter your message")} 
+              placeholder={t("Enter your message (optional)")} 
               value={message} 
               onChange={(e) => setMessage(e.target.value)} 
               required

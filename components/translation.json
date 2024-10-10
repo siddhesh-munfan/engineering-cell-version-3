@@ -9,7 +9,7 @@
     "Select District": "Select District",
     "Select Taluka": "Select Taluka",
     "Select Engineering Branch": "Select Engineering Branch",
-    "Enter your message": "Enter your message",
+    "Enter your message (optional)": "Enter your message (optional)",
     "Submit": "Submit",
     "Select Language": "Select Language",
     "Upload Profile Picture": "Upload Profile Picture"
@@ -24,7 +24,7 @@
     "Select District": "जिल्हा निवडा",
     "Select Taluka": "तालुका निवडा",
     "Select Engineering Branch": "अभियांत्रिकी शाखा निवडा",
-    "Enter your message": "आपला संदेश प्रविष्ट करा",
+    "Enter your message (optional)": "आपला संदेश प्रविष्ट करा (ऐच्छिक)",
     "Submit": "सबमिट करा",
     "Select Language": "भाषा निवडा",
     "Upload Profile Picture": "प्रोफाइल चित्र अपलोड करा"
@@ -39,7 +39,7 @@
     "Select District": "जिला चुनें",
     "Select Taluka": "तालुका चुनें",
     "Select Engineering Branch": "इंजीनियरिंग शाखा चुनें",
-    "Enter your message": "अपना संदेश दर्ज करें",
+    "Enter your message (optional)": "अपना संदेश दर्ज करें (वैकल्पिक)",
     "Submit": "जमा करें",
     "Select Language": "भाषा चुनें",
     "Upload Profile Picture": "प्रोफ़ाइल चित्र अपलोड करें"
