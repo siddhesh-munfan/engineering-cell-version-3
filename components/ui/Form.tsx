@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import districtsData from "@/components/districtsData.json";
 import translations from "@/components/translation.json"; // Import translations
 
+
 const engineeringBranches = [
   "Computer Science", "Information Technology", "Electronics", "Electrical", "Mechanical", "Civil", "Chemical", "Aerospace"
 ];
@@ -34,7 +35,7 @@ const Form = ({
 
   // State for error messages
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
@@ -70,17 +71,17 @@ const Form = ({
     return newErrors;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Prevent the default form submission behavior
     const validationErrors = validateForm();
-
+    
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors); // Set errors if any validation fails
     } else {
       setErrors({}); // Clear errors if the form is valid
 
-      // Proceed with form submission logic here (e.g., send to an API)
-      console.log({
+      // Prepare data to send to MongoDB
+      const formData = {
         name,
         email,
         phone,
@@ -88,12 +89,42 @@ const Form = ({
         selectedDistrict,
         selectedTaluka,
         message,
-      });
+      };
+
+      try {
+        const response = await fetch('/api/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Data submitted successfully');
+          // Optionally reset form fields here
+          setName("");
+          setEmail("");
+          setPhone("");
+          setAddress("");
+          setMessage("");
+          setSelectedDistrict("");
+          setSelectedTaluka("");
+        } else {
+          alert('Error submitting data');
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+      
+      // console.log(formData); // For debugging purposes
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}> {/* Add form tag and handleSubmit */}
+    <form onSubmit={handleSubmit}>
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">{t("User Information Form")}</CardTitle>
