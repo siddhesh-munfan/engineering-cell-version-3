@@ -1,4 +1,4 @@
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: any) {
     let res = await fetch("http://localhost:3000/api/posts", {
       method: "GET",
       headers: {

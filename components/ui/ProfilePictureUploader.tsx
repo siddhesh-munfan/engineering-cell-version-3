@@ -2,11 +2,11 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 
 interface ProfilePictureUploaderProps {
-  profilePicture: string | null;
-  setProfilePicture: (picture: string | null) => void;
+  profilePicture: string | File | null; // Allow File type
+  setProfilePicture: (picture: string | File | null) => void; // Allow File type
 }
 
-const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({ profilePicture, setProfilePicture }) => {
+export default function ProfilePictureUploader({ profilePicture, setProfilePicture }: ProfilePictureUploaderProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,13 +48,9 @@ const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({ profile
       <label className="w-full">
         <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
         <div className="cursor-pointer bg-black text-white py-2 px-8 rounded text-center border border-black hover:bg-gray-800 flex items-center justify-center space-x-2">
-            
-            <span>Upload Image</span> {/* Button text */}
+          <span>Upload Image</span> {/* Button text */}
         </div>
-        </label>
-
+      </label>
     </div>
   );
-};
-
-export default ProfilePictureUploader;
+}

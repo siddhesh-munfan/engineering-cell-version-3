@@ -1,32 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import Input from "@/components/ui/input";
+import Textarea  from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfilePictureUploader from "@/components/ui/ProfilePictureUploader";
 import { Button } from "@/components/ui/button";
 import districtsData from "@/components/districtsData.json";
-import translations from "@/components/translation.json"; // Import translations
+import translations from '@/components/translation';
 
+// Define the valid language keys
+type LanguageKeys = 'en' | 'hi' | 'mr';
 
 const engineeringBranches = [
   "Computer Science", "Information Technology", "Electronics", "Electrical", "Mechanical", "Civil", "Chemical", "Aerospace"
 ];
 
-const Form = ({
+// Define the props interface
+interface FormProps {
+  profilePicture: string | File | null; // Allow File type
+  setProfilePicture: (picture: string | File | null) => void; // Allow File type
+  selectedDistrict: string;
+  setSelectedDistrict: (district: string) => void;
+  selectedTaluka: string;
+  setSelectedTaluka: (taluka: string) => void;
+  language: LanguageKeys; // Use the defined type here
+}
+
+export default function Form({
   profilePicture,
   setProfilePicture,
   selectedDistrict,
   setSelectedDistrict,
   selectedTaluka,
   setSelectedTaluka,
-  language, // Add language to props
-}) => {
-  const t = (key: string) => translations[language][key] || key; // Translation function
-
-  // State for form inputs
+  language,
+}: FormProps) {
+  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -35,35 +46,35 @@ const Form = ({
 
   // State for error messages
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
+
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
 
     // Validate name
-    if (!name) newErrors.name = t("Name is required.");
+    if (!name) newErrors.name = translations[language].name + " is required.";
 
     // Validate email
     if (!email) {
-      newErrors.email = t("Email is required.");
+      newErrors.email = translations[language].email + " is required.";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = t("Email is not valid.");
+      newErrors.email = translations[language].email + " is not valid.";
     }
 
     // Validate phone
     if (!phone) {
-      newErrors.phone = t("Phone number is required.");
+      newErrors.phone = translations[language].phoneNumber + " is required.";
     } else if (!/^\d{10}$/.test(phone)) {
-      newErrors.phone = t("Phone number must be 10 digits.");
+      newErrors.phone = translations[language].phoneNumber + " must be 10 digits.";
     }
 
     // Validate address
-    if (!address) newErrors.address = t("Address is required.");
+    if (!address) newErrors.address = translations[language].address + " is required.";
 
     // Validate district
-    if (!selectedDistrict) newErrors.district = t("District is required.");
+    if (!selectedDistrict) newErrors.district = translations[language].selectDistrict + " is required.";
 
     // Validate taluka
-    if (!selectedTaluka) newErrors.taluka = t("Taluka is required.");
+    if (!selectedTaluka) newErrors.taluka = translations[language].selectTaluka + " is required.";
 
     return newErrors;
   };
@@ -100,7 +111,7 @@ const Form = ({
         const result = await response.json();
         
         if (result.success) {
-          alert('Data submitted successfully');
+          alert(translations[language].submit + ' successful');
           // Optionally reset form fields here
           setName("");
           setEmail("");
@@ -110,7 +121,7 @@ const Form = ({
           setSelectedDistrict("");
           setSelectedTaluka("");
         } else {
-          alert('Error submitting data');
+          alert(translations[language].submit + ' failed');
         }
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -124,7 +135,7 @@ const Form = ({
     <form onSubmit={handleSubmit}>
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">{t("User Information Form")}</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">{translations[language].title}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -132,32 +143,32 @@ const Form = ({
               <ProfilePictureUploader profilePicture={profilePicture} setProfilePicture={setProfilePicture} />
             </div>
             <Input 
-              placeholder={t("Name")} 
+              placeholder={translations[language].name} 
               value={name} 
-              onChange={(e) => setName(e.target.value)} 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} 
               required
             />
             {errors.name && <p className="text-red-500">{errors.name}</p>}
             <Input 
               type="email" 
-              placeholder={t("Email")} 
+              placeholder={translations[language].email} 
               value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} 
               required
             />
             {errors.email && <p className="text-red-500">{errors.email}</p>}
             <Input 
               type="number" 
-              placeholder={t("Phone")} 
+              placeholder={translations[language].phoneNumber} 
               value={phone} 
-              onChange={(e) => setPhone(e.target.value)} 
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)} 
               required
             />
             {errors.phone && <p className="text-red-500">{errors.phone}</p>}
             <Textarea 
-              placeholder={t("Address")} 
+              placeholder={translations[language].address} 
               value={address} 
-              onChange={(e) => setAddress(e.target.value)} 
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAddress(e.target.value)} 
               required
             />
             {errors.address && <p className="text-red-500">{errors.address}</p>}
@@ -166,7 +177,7 @@ const Form = ({
               setSelectedTaluka(""); // Reset taluka when district changes
             }}>
               <SelectTrigger>
-                <SelectValue placeholder={t("Select District")} />
+                <SelectValue placeholder={translations[language].selectDistrict} />
               </SelectTrigger>
               <SelectContent>
                 {districtsData.map((district) => (
@@ -179,7 +190,7 @@ const Form = ({
             {errors.district && <p className="text-red-500">{errors.district}</p>}
             <Select onValueChange={(value) => setSelectedTaluka(value)}>
               <SelectTrigger>
-                <SelectValue placeholder={t("Select Taluka")} />
+                <SelectValue placeholder={translations[language].selectTaluka} />
               </SelectTrigger>
               <SelectContent>
                 {selectedDistrict &&
@@ -195,7 +206,7 @@ const Form = ({
             {errors.taluka && <p className="text-red-500">{errors.taluka}</p>}
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder={t("Select Engineering Branch")} />
+                <SelectValue placeholder={translations[language].selectBranch} />
               </SelectTrigger>
               <SelectContent>
                 {engineeringBranches.map((branch) => (
@@ -206,18 +217,15 @@ const Form = ({
               </SelectContent>
             </Select>
             <Textarea 
-              placeholder={t("Enter your message (optional)")} 
+              placeholder={translations[language].message} 
               value={message} 
-              onChange={(e) => setMessage(e.target.value)} 
-              required
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)} 
             />
             {errors.message && <p className="text-red-500">{errors.message}</p>}
-            <Button className="w-full" type="submit">{t("Submit")}</Button>
+            <Button className="w-full" type="submit">{translations[language].submit}</Button>
           </div>
         </CardContent>
       </Card>
     </form>
   );
-};
-
-export default Form;
+}

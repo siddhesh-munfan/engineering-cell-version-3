@@ -2,6 +2,7 @@
 
 import { MapPin, Phone, Mail } from "lucide-react";
 import Image from "next/image";
+import test_image from "@/components/assets/user.png"
 
 export default function Footer() {
   return (
@@ -39,7 +40,7 @@ export default function Footer() {
             <h3 className="text-lg font-semibold">Scan QR Code</h3>
             <div className="bg-white p-2 rounded-lg inline-block">
               <Image
-                src="/placeholder.svg?height=150&width=150"
+                src={test_image}
                 alt="QR Code"
                 width={150}
                 height={150}

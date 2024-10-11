@@ -1,27 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
 import Navbar from "@/components/ui/Navbar";
 import Form from "@/components/ui/Form"; // Import the new component
 import Footer from "@/components/ui/Footer";
 
+// Define the valid language keys
+type LanguageKeys = 'en' | 'hi' | 'mr';
+
 export function UserInfoForm() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState<LanguageKeys>("en"); // Set type to LanguageKeys
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedTaluka, setSelectedTaluka] = useState("");
-  const [profilePicture, setProfilePicture] = useState<string | null>(null); // Profile picture state in the parent
+  const [profilePicture, setProfilePicture] = useState<string | File | null>(null); // Allow File type
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-    console.log(theme);
-  };
 
   if (!mounted) {
     return null;
