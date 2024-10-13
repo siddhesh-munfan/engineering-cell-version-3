@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Input from "@/components/ui/input";
-import Textarea  from "@/components/ui/textarea";
+import Textarea from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfilePictureUploader from "@/components/ui/ProfilePictureUploader";
@@ -14,7 +14,7 @@ import translations from '@/components/translation';
 type LanguageKeys = 'en' | 'hi' | 'mr';
 
 const engineeringBranches = [
-  "Computer Science", "Information Technology", "Electronics", "Electrical", "Mechanical", "Civil", "Chemical", "Aerospace"
+  "Computer Science", "Information Technology", "Electronics", "Electrical", "Mechanical", "Civil", "Chemical", "Aerospace", "E and TC"
 ];
 
 // Define the props interface
@@ -43,9 +43,11 @@ export default function Form({
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
+  const [eng_branch, setEngBranch] = useState(""); // Added state for engineering branch
 
   // State for error messages
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false); // Add state for submit button
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -71,10 +73,13 @@ export default function Form({
     if (!address) newErrors.address = translations[language].address + " is required.";
 
     // Validate district
-    if (!selectedDistrict) newErrors.district = translations[language].selectDistrict + " is required.";
+    if (!selectedDistrict) newErrors.dist = translations[language].selectDistrict + " is required.";
 
     // Validate taluka
-    if (!selectedTaluka) newErrors.taluka = translations[language].selectTaluka + " is required.";
+    if (!selectedTaluka) newErrors.tal = translations[language].selectTaluka + " is required.";
+
+    // Validate engineering branch
+    if (!eng_branch) newErrors.eng_branch = translations[language].selectBranch + " is required.";
 
     return newErrors;
   };
@@ -87,32 +92,42 @@ export default function Form({
       setErrors(validationErrors); // Set errors if any validation fails
     } else {
       setErrors({}); // Clear errors if the form is valid
+      setIsSubmitting(true); // Set submitting state to true
 
       // Prepare data to send to MongoDB
       const formData = {
         name,
         email,
-        phone,
         address,
-        selectedDistrict,
-        selectedTaluka,
         message,
+        dist: selectedDistrict,
+        tal: selectedTaluka,
+        phone,
+        eng_branch,
+        prof_img: profilePicture instanceof File ? await convertToBase64(profilePicture) : profilePicture,
       };
 
       try {
-        const response = await fetch('/api/submit', {
+        const response = await fetch('https://wzigldvkde.execute-api.ap-south-1.amazonaws.com/default/engineers-cell-register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(formData),
         });
-        
+
         const result = await response.json();
-        
+        console.log('API Response:', result); // Log the response to check structure
+
         if (result.success) {
-          alert(translations[language].submit + ' successful');
-          // Optionally reset form fields here
+          // Check if platformId exists in the result
+          if (result.platformId) {
+            alert(`${translations[language].submit} successful: User added successfully: ${result.platformId}`);
+          } else {
+            alert(`${translations[language].submit} successful, but platformId not found.`);
+          }
+          
+          // Reset form fields
           setName("");
           setEmail("");
           setPhone("");
@@ -120,15 +135,27 @@ export default function Form({
           setMessage("");
           setSelectedDistrict("");
           setSelectedTaluka("");
+          setEngBranch(""); // Reset engineering branch
+          setProfilePicture(null); // Reset profile picture
         } else {
-          alert(translations[language].submit + ' failed');
+          alert(`${translations[language].submit} failed: ${result.message}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error submitting form:', error);
+        alert(`${translations[language].submit} failed: ${error.message}`);
+      } finally {
+        setIsSubmitting(false); // Reset submitting state regardless of outcome
       }
-      
-      // console.log(formData); // For debugging purposes
     }
+  };
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   return (
@@ -187,7 +214,7 @@ export default function Form({
                 ))}
               </SelectContent>
             </Select>
-            {errors.district && <p className="text-red-500">{errors.district}</p>}
+            {errors.dist && <p className="text-red-500">{errors.dist}</p>}
             <Select onValueChange={(value) => setSelectedTaluka(value)}>
               <SelectTrigger>
                 <SelectValue placeholder={translations[language].selectTaluka} />
@@ -203,8 +230,8 @@ export default function Form({
                     ))}
               </SelectContent>
             </Select>
-            {errors.taluka && <p className="text-red-500">{errors.taluka}</p>}
-            <Select>
+            {errors.tal && <p className="text-red-500">{errors.tal}</p>}
+            <Select onValueChange={setEngBranch}>
               <SelectTrigger>
                 <SelectValue placeholder={translations[language].selectBranch} />
               </SelectTrigger>
@@ -216,13 +243,15 @@ export default function Form({
                 ))}
               </SelectContent>
             </Select>
+            {errors.eng_branch && <p className="text-red-500">{errors.eng_branch}</p>}
             <Textarea 
               placeholder={translations[language].message} 
               value={message} 
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)} 
             />
-            {errors.message && <p className="text-red-500">{errors.message}</p>}
-            <Button className="w-full" type="submit">{translations[language].submit}</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? translations[language].submitting : translations[language].submit}
+            </Button>
           </div>
         </CardContent>
       </Card>
