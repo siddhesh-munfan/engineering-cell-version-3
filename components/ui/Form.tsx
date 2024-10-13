@@ -93,7 +93,7 @@ export default function Form({
     } else {
       setErrors({}); // Clear errors if the form is valid
       setIsSubmitting(true); // Set submitting state to true
-
+  
       // Prepare data to send to MongoDB
       const formData = {
         name,
@@ -106,7 +106,7 @@ export default function Form({
         eng_branch,
         prof_img: profilePicture instanceof File ? await convertToBase64(profilePicture) : profilePicture,
       };
-
+  
       try {
         const response = await fetch('https://wzigldvkde.execute-api.ap-south-1.amazonaws.com/default/engineers-cell-register', {
           method: 'POST',
@@ -115,10 +115,10 @@ export default function Form({
           },
           body: JSON.stringify(formData),
         });
-
+  
         const result = await response.json();
         console.log('API Response:', result); // Log the response to check structure
-
+  
         if (result.success) {
           // Check if platformId exists in the result
           if (result.platformId) {
@@ -140,14 +140,20 @@ export default function Form({
         } else {
           alert(`${translations[language].submit} failed: ${result.message}`);
         }
-      } catch (error: any) {
-        console.error('Error submitting form:', error);
-        alert(`${translations[language].submit} failed: ${error.message}`);
+      } catch (error: unknown) { // Specify a more precise type
+        if (error instanceof Error) {
+          console.error('Error submitting form:', error);
+          alert(`${translations[language].submit} failed: ${error.message}`);
+        } else {
+          console.error('Unexpected error submitting form:', error);
+          alert(`${translations[language].submit} failed: An unexpected error occurred.`);
+        }
       } finally {
         setIsSubmitting(false); // Reset submitting state regardless of outcome
       }
     }
   };
+  
 
   const convertToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
